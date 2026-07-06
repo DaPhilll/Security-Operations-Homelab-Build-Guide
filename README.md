@@ -9,6 +9,32 @@ Work through the phases in order. Each phase lists its purpose, the tool it uses
 
 A note on tooling: most of this lab runs on free and open source software. A few components reference commercial platforms (Microsoft Sentinel, Rapid7 InsightIDR). Those were used in a professional enterprise environment, not in this homelab. They are included here only to document useful work, commands, and processes. Where a commercial tool has a viable trial, that is noted so you can approximate the workflow without a paid license.
 
+## Reference Hardware and Resource Requirements
+This lab is not designed to run continuously or with all virtual machines active at once. Most workflows use a subset of the machines. The requirements below reflect intermittent, subset-based use with headroom for the host OS and basic tasks such as web browsing.
+
+**Virtual machine RAM allocations:**
+
+| VM | Role | RAM |
+| :--- | :--- | :--- |
+| SRV-DC01 | Windows Server domain controller | 4 GB |
+| WKSTN-01 | Windows 10/11 endpoint | 4 GB |
+| WIN7-LEGACY01 | Legacy scan target | 2 GB |
+| SRV-SOC01 | Ubuntu (Wazuh, Shuffle, OpenVAS) | 8 GB |
+| SURICATA-01 | Ubuntu (Suricata sensor) | 4 GB |
+
+Running all five machines at once requires 22 GB of VM RAM. In practice, a working subset of three to four machines covers most tasks.
+
+**Recommended host specifications:**
+- **CPU:** 8 cores / 16 threads minimum. Suricata packet processing and OpenVAS scans both benefit from additional cores.
+- **RAM:** 32 GB comfortably runs a working subset plus the host OS. 64 GB allows all five machines to run at once and leaves room to split the SOC stack across separate VMs later.
+- **Storage:** A 1 TB SSD (NVMe preferred). Budget roughly 350 to 400 GB for the base VMs, with additional space for Wazuh indices, OpenVAS feed data, and VM snapshots.
+
+**Reference build (host used for this lab):**
+- **CPU:** AMD Ryzen 9 7900X (12 cores / 24 threads)
+- **RAM:** 64 GB DDR5
+
+This configuration runs all five virtual machines simultaneously with headroom for the host OS and standard tasks. The 12-core CPU covers concurrent Suricata monitoring and OpenVAS scanning without contention, and 64 GB of RAM supports running the full lab at once or separating the SOC stack (Wazuh, Shuffle, OpenVAS) onto dedicated virtual machines.
+
 ---
 
 ## Phase 1: Virtualization and Network Foundation
